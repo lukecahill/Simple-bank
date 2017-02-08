@@ -47,9 +47,41 @@ public abstract class BaseBankAccount {
         System.out.println("Account description: " + this.description);
     }
 
+    protected void withdraw() {
+
+        System.out.println("Enter an amount to deposit: ");
+        double amount = input.nextDouble();
+
+        if(amount > this.balance) {
+            System.out.println("Withdrawal amount is greater than the current balance");
+            return;
+        }
+
+        this.balance -= amount;
+        System.out.println("Amount withdrawn! New balance is: " + this.balance);
+        //want to then update the database
+    }
+
+    protected void deposit() {
+        System.out.println("Enter an amount to deposit: ");
+        double amount = input.nextDouble();
+
+        if(amount < 0) {
+            System.out.println("Amount is less than 0");
+            return;
+        }
+
+        this.balance += amount;
+        System.out.println("Amount deposited! New balance is: " + this.balance);
+        // want to then update the database
+    }
+
+    protected void showBalance() {
+
+        System.out.println("Showing balance for: " + this.name);
+        System.out.println(this.balance);
+    }
+
     protected abstract void load();
-    protected abstract void deposit();
-    protected abstract void withdraw();
-    protected abstract void showBalance();
 
 }
