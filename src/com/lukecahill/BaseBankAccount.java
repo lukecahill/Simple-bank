@@ -53,7 +53,7 @@ public abstract class BaseBankAccount {
 
     protected void withdraw() {
 
-        System.out.println("Enter an amount to deposit: ");
+        System.out.print("Enter an amount to deposit: ");
         double amount = input.nextDouble();
 
         if(amount > this.balance) {
@@ -67,7 +67,7 @@ public abstract class BaseBankAccount {
     }
 
     protected void deposit() {
-        System.out.println("Enter an amount to deposit: ");
+        System.out.print("Enter an amount to deposit: ");
         double amount = input.nextDouble();
 
         if(amount < 0) {

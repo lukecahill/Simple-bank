@@ -60,15 +60,15 @@ public class IsaAccount extends BaseBankAccount {
 
     protected void load() {
         try(
-                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "SELECT IsaAccountId, IsaAccountBalance, " +
-                                "CustomerId, IsaAccountName, IsaAccountDescription " +
-                                "FROM isaaccounts " +
-                                "WHERE CustomerId = ? " +
-                                "LIMIT 1",
-                        ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY)
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "SELECT IsaAccountId, IsaAccountBalance, " +
+                            "CustomerId, IsaAccountName, IsaAccountDescription " +
+                            "FROM isaaccounts " +
+                            "WHERE CustomerId = ? " +
+                            "LIMIT 1",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
         ) {
             pstmt.setInt(1, customerId);
             ResultSet rs = pstmt.executeQuery();

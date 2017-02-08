@@ -5,6 +5,7 @@ import com.lukecahill.database.DBType;
 import com.lukecahill.database.DBUtil;
 
 import java.sql.*;
+import java.text.DecimalFormat;
 
 /**
  *
@@ -62,15 +63,15 @@ public class CurrentAccount extends BaseBankAccount {
 
     public void load() {
         try(
-                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "SELECT CurrentAccountId, CurrentAccountBalance, " +
-                                "CustomerId, CurrentAccountName, CurrentAccountDescription " +
-                                "FROM currentaccounts " +
-                                "WHERE CustomerId = ? " +
-                                "LIMIT 1",
-                        ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY)
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "SELECT CurrentAccountId, CurrentAccountBalance, " +
+                            "CustomerId, CurrentAccountName, CurrentAccountDescription " +
+                            "FROM currentaccounts " +
+                            "WHERE CustomerId = ? " +
+                            "LIMIT 1",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
         ) {
             pstmt.setInt(1, customerId);
             ResultSet rs = pstmt.executeQuery();
@@ -93,6 +94,8 @@ public class CurrentAccount extends BaseBankAccount {
 
     public void calculateInterest() {
         double newInterest = (this.balance * INTEREST) + this.balance;
-        System.out.println(newInterest);
+
+        DecimalFormat decimalFormat = new DecimalFormat("###.##");
+        System.out.println(decimalFormat.format(newInterest));
     }
 }
