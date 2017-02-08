@@ -13,7 +13,7 @@ public abstract class BaseBankAccount {
     protected final Scanner input = new Scanner(System.in);
 
     protected String name;
-    protected String Description;
+    protected String description;
     protected double balance;
     protected int customerId;
     protected int currentAccountId;
@@ -22,7 +22,8 @@ public abstract class BaseBankAccount {
         "1 - Show balance",
         "2 - Deposit money",
         "3 - Withdraw money",
-        "4 - Print balance"
+        "4 - Print balance",
+        "5 - Show account details"
     };
 
     public void showOptions() {
@@ -39,6 +40,11 @@ public abstract class BaseBankAccount {
         } catch(IOException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    protected void showAboutAccount() {
+        System.out.println("Name of account: " + this.name);
+        System.out.println("Account description: " + this.description);
     }
 
     protected abstract void load();

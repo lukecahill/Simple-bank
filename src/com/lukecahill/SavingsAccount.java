@@ -15,6 +15,33 @@ public class SavingsAccount extends BaseBankAccount {
         System.out.println("Created savings account");
     }
 
+    @Override
+    public void showOptions() {
+        super.showOptions();
+
+        int option = input.nextInt();
+        switch (option) {
+            case 1:
+                this.showBalance();
+                break;
+            case 2:
+                this.deposit();
+                break;
+            case 3:
+                this.withdraw();
+                break;
+            case 4:
+                this.printBalance();
+                break;
+            case 5:
+                this.showAboutAccount();
+                break;
+            default:
+                System.out.println("Option not found. Please try again.");
+                break;
+        }
+    }
+
     protected void showBalance() {
 
     }

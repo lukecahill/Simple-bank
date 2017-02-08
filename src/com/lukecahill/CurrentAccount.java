@@ -41,6 +41,9 @@ public class CurrentAccount extends BaseBankAccount {
             case 4:
                 this.printBalance();
                 break;
+            case 5:
+                this.showAboutAccount();
+                break;
             default:
                 System.out.println("Option not found. Please try again.");
                 break;
@@ -51,7 +54,11 @@ public class CurrentAccount extends BaseBankAccount {
         try(
                 Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
                 PreparedStatement pstmt = conn.prepareStatement(
-                        "SELECT CurrentAccountId, CurrentAccountBalance FROM currentaccounts WHERE CustomerId = ? LIMIT 1",
+                        "SELECT CurrentAccountId, CurrentAccountBalance, " +
+                                "CustomerId, CurrentAccountName, CurrentAccountDescription " +
+                                "FROM currentaccounts " +
+                                "WHERE CustomerId = ? " +
+                                "LIMIT 1",
                         ResultSet.TYPE_SCROLL_INSENSITIVE,
                         ResultSet.CONCUR_READ_ONLY);
         ) {
@@ -61,6 +68,9 @@ public class CurrentAccount extends BaseBankAccount {
             while(rs.next()) {
                 this.balance = rs.getDouble("CurrentAccountBalance");
                 this.currentAccountId = rs.getInt("CurrentAccountId");
+                this.customerId = rs.getInt("CustomerId");
+                this.name = rs.getString("CurrentAccountName");
+                this.description = rs.getString("CurrentAccountDescription");
                 this.loaded = true;
             }
         } catch (SQLException e) {
@@ -69,6 +79,7 @@ public class CurrentAccount extends BaseBankAccount {
     }
 
     public void showBalance() {
+        System.out.println("Showing balance for: " + this.name);
         System.out.println(this.balance);
     }
 
