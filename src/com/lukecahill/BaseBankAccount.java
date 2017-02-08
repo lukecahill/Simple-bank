@@ -1,13 +1,20 @@
 package com.lukecahill;
 
+import java.util.Scanner;
+
 /**
  *
  * Created by Luke on 08/02/2017.
  *
  */
 public abstract class BaseBankAccount {
+    protected final Scanner input = new Scanner(System.in);
+
     protected String name;
     protected String Description;
+    protected double balance;
+    protected int customerId;
+    protected int currentAccountId;
 
     String[] accountOptions = {
         "1 - Show balance",

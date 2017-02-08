@@ -6,7 +6,6 @@ import com.lukecahill.database.DBUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 import java.sql.*;
 
 /**
@@ -16,11 +15,6 @@ import java.sql.*;
  */
 public class CurrentAccount extends BaseBankAccount {
 
-    private final int customerId;
-    private final Scanner input = new Scanner(System.in);
-
-    private int currentAccountId;
-    private double balance;
     private boolean loaded = false;
 
     public CurrentAccount(int customerId) {
