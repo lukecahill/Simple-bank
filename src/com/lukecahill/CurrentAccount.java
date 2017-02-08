@@ -13,6 +13,8 @@ import java.sql.*;
  */
 public class CurrentAccount extends BaseBankAccount {
 
+    private final double INTEREST = 0.025d; // this interest rate is terrible :^)
+
     public CurrentAccount(int customerId) {
         this.customerId = customerId;
         load();
@@ -21,29 +23,41 @@ public class CurrentAccount extends BaseBankAccount {
 
     @Override
     public void showOptions() {
-        super.showOptions();
+        do {
+            super.showOptions();
 
-        int option = input.nextInt();
-        switch (option) {
-            case 1:
-                this.showBalance();
-                break;
-            case 2:
-                this.deposit();
-                break;
-            case 3:
-                this.withdraw();
-                break;
-            case 4:
-                this.printBalance();
-                break;
-            case 5:
-                this.showAboutAccount();
-                break;
-            default:
-                System.out.println("Option not found. Please try again.");
-                break;
-        }
+            String option = input.next();
+            option = option.toLowerCase();
+            switch (option) {
+                case "1":
+                    this.showBalance();
+                    break;
+                case "2":
+                    this.deposit();
+                    break;
+                case "3":
+                    this.withdraw();
+                    break;
+                case "4":
+                    this.printBalance();
+                    break;
+                case "5":
+                    this.showAboutAccount();
+                    break;
+                case "6":
+                    this.calculateInterest();
+                    break;
+                case "b":
+                    this.leaveAccount = true;
+                    break;
+                case "q":
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Option not found. Please try again.");
+                    break;
+            }
+        } while(!leaveAccount);
     }
 
     public void load() {
@@ -56,7 +70,7 @@ public class CurrentAccount extends BaseBankAccount {
                                 "WHERE CustomerId = ? " +
                                 "LIMIT 1",
                         ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY);
+                        ResultSet.CONCUR_READ_ONLY)
         ) {
             pstmt.setInt(1, customerId);
             ResultSet rs = pstmt.executeQuery();
@@ -75,5 +89,10 @@ public class CurrentAccount extends BaseBankAccount {
 
     public void printBalance() {
         super.printBalance("current_account_balance.txt");
+    }
+
+    public void calculateInterest() {
+        double newInterest = (this.balance * INTEREST) + this.balance;
+        System.out.println(newInterest);
     }
 }

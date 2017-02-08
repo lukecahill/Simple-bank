@@ -17,13 +17,17 @@ public abstract class BaseBankAccount {
     protected double balance;
     protected int customerId;
     protected int currentAccountId;
+    protected boolean leaveAccount = false;
 
     String[] accountOptions = {
         "1 - Show balance",
         "2 - Deposit money",
         "3 - Withdraw money",
         "4 - Print balance",
-        "5 - Show account details"
+        "5 - Show account details",
+        "6 - Calculate balance with interest after a year",
+        "b - Go back",
+        "q - Quit"
     };
 
     public void showOptions() {
@@ -83,5 +87,6 @@ public abstract class BaseBankAccount {
     }
 
     protected abstract void load();
+    protected abstract void calculateInterest();
 
 }

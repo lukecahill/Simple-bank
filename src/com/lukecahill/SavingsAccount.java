@@ -3,8 +3,6 @@ package com.lukecahill;
 import com.lukecahill.database.DBType;
 import com.lukecahill.database.DBUtil;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,35 +16,47 @@ import java.sql.SQLException;
 
 public class SavingsAccount extends BaseBankAccount {
 
-    public SavingsAccount() {
+    private final double INTEREST = 0.40d;
+
+    public SavingsAccount(int customerId) {
         System.out.println("Created savings account");
+        this.customerId = customerId;
     }
 
     @Override
     public void showOptions() {
-        super.showOptions();
+        do {
+            super.showOptions();
 
-        int option = input.nextInt();
-        switch (option) {
-            case 1:
-                this.showBalance();
-                break;
-            case 2:
-                this.deposit();
-                break;
-            case 3:
-                this.withdraw();
-                break;
-            case 4:
-                this.printBalance();
-                break;
-            case 5:
-                this.showAboutAccount();
-                break;
-            default:
-                System.out.println("Option not found. Please try again.");
-                break;
-        }
+            String option = input.next();
+            option = option.toLowerCase();
+            switch (option) {
+                case "1":
+                    this.showBalance();
+                    break;
+                case "2":
+                    this.deposit();
+                    break;
+                case "3":
+                    this.withdraw();
+                    break;
+                case "4":
+                    this.printBalance();
+                    break;
+                case "5":
+                    this.showAboutAccount();
+                    break;
+                case "b":
+                    this.leaveAccount = true;
+                    break;
+                case "q":
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Option not found. Please try again.");
+                    break;
+            }
+        } while(!leaveAccount);
     }
 
     protected void load() {
@@ -59,7 +69,7 @@ public class SavingsAccount extends BaseBankAccount {
                                 "WHERE CustomerId = ? " +
                                 "LIMIT 1",
                         ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY);
+                        ResultSet.CONCUR_READ_ONLY)
         ) {
             pstmt.setInt(1, customerId);
             ResultSet rs = pstmt.executeQuery();
@@ -81,4 +91,8 @@ public class SavingsAccount extends BaseBankAccount {
         super.printBalance("savings_account_balance.txt");
     }
 
+    public void calculateInterest() {
+        double newInterest = (this.balance * INTEREST) + this.balance;
+        System.out.println(newInterest);
+    }
 }
