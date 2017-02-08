@@ -101,11 +101,6 @@ public class CurrentAccount extends BaseBankAccount {
     }
 
     public void printBalance() {
-        try(PrintWriter writer = new PrintWriter("current_account_balance.txt")) {
-            writer.write("The current balance of the account is: " + balance);
-            System.out.println("Saved to \"current_account_balance.txt\".");
-        } catch(IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+        super.printBalance("current_account_balance.txt");
     }
 }

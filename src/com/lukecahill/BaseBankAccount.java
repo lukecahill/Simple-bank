@@ -1,5 +1,7 @@
 package com.lukecahill;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
@@ -29,10 +31,19 @@ public abstract class BaseBankAccount {
         }
     }
 
+    protected void printBalance(String filename) {
+
+        try(PrintWriter writer = new PrintWriter(filename)) {
+            writer.write("The current balance of the account is: " + balance);
+            System.out.println("Saved to \"" + filename + "\".");
+        } catch(IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     protected abstract void load();
     protected abstract void deposit();
     protected abstract void withdraw();
     protected abstract void showBalance();
-    protected abstract void printBalance();
 
 }
