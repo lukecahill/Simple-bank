@@ -30,8 +30,9 @@ public class IsaAccount extends BaseBankAccount {
 
     protected void printBalance() {
 
-        try(PrintWriter writer = new PrintWriter("current_account_balance.txt")) {
+        try(PrintWriter writer = new PrintWriter("isa_account_balance.txt")) {
             writer.write("The current balance of the account is: " + balance);
+            System.out.println("Saved to \"isa_account_balance.txt\".");
         } catch(IOException ex) {
             System.out.println(ex.getMessage());
         }

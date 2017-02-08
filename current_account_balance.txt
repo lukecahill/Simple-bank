@@ -1,1 +1,0 @@
-The current balance of the account is: 200.0
