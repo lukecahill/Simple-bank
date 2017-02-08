@@ -14,6 +14,7 @@ import java.util.Scanner;
 public class Bank {
 
     Customer customer = new Customer();
+    EncryptPasswords passwordEncrypt = new EncryptPasswords();
     private static Scanner input = new Scanner(System.in);
 
     private String bankName = "Lukes Bank";
@@ -22,12 +23,18 @@ public class Bank {
         boolean opened = false;
         int customerId;
         String customerPassword;
+        System.out.println("Welcome to " + this.bankName);
 
         do {
             customerId = getCustomerId();
+
+            if(customerId <= 0) {
+                System.out.println("Please enter a valid ID.");
+            }
+
             customerPassword = getCustomerPassword();
+            customerPassword = passwordEncrypt.encryptPassword(customerPassword);
             if (checkCustomerId(customerId, customerPassword)) {
-                System.out.println("Welcome to " + this.bankName);
                 opened = true;
             } else {
                 System.out.println("Could not find a customer with those details. Try again.");
@@ -47,8 +54,8 @@ public class Bank {
 
         try {
             customerId = input.nextInt();
-        } catch(NumberFormatException e) {
-            System.exit(0);
+        } catch(Exception e) {
+            System.out.println("Please enter a valid ID.");
             return 0;
         }
 
@@ -66,19 +73,19 @@ public class Bank {
     private boolean checkCustomerId(int customerId, String customerPassword) {
 
         try(
-                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "SELECT COUNT(CustomerId) " +
-                                "FROM customers " +
-                                "WHERE CustomerId = ? " +
-                                "AND CustomerPassword = ? " +
-                                "LIMIT 1",
-                        ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY);
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement statement = conn.prepareStatement(
+                    "SELECT COUNT(CustomerId) " +
+                            "FROM customers " +
+                            "WHERE CustomerId = ? " +
+                            "AND CustomerPassword = ? " +
+                            "LIMIT 1",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
         ) {
-            pstmt.setInt(1, customerId);
-            pstmt.setString(2, customerPassword);
-            ResultSet rs = pstmt.executeQuery();
+            statement.setInt(1, customerId);
+            statement.setString(2, customerPassword);
+            ResultSet rs = statement.executeQuery();
 
             while(rs.next()) {
                 int count = rs.getInt(1);
@@ -96,14 +103,14 @@ public class Bank {
 
     private void getCustomerDetails(int customerId) {
         try(
-                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "SELECT CustomerId, CustomerName, CustomerPassword FROM customers WHERE CustomerId = ? LIMIT 1",
-                        ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY);
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "SELECT CustomerId, CustomerName, CustomerPassword FROM customers WHERE CustomerId = ? LIMIT 1",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
         ) {
-            pstmt.setInt(1, customerId);
-            ResultSet rs = pstmt.executeQuery();
+            preparedStatement.setInt(1, customerId);
+            ResultSet rs = preparedStatement.executeQuery();
 
             while(rs.next()) {
                 customer.setCustomerName(rs.getString("CustomerName"));
