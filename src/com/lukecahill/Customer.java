@@ -22,6 +22,7 @@ public class Customer {
     private String customerPassword;
 
     private static Scanner input = new Scanner(System.in);
+    private EncryptPasswords passwordEncrypt = new EncryptPasswords();
     private IsaAccount isaAccount;
     private CurrentAccount currentAccount;
     private SavingsAccount savingsAccount;
@@ -77,10 +78,12 @@ public class Customer {
             System.out.print("Enter your old password: ");
             String newPassword = input.next();
 
-            if (newPassword.equalsIgnoreCase(this.getCustomerPassword()) || newPassword.isEmpty()) {
-                System.out.println("Invalid password, or password is the same as the last used.");
+            if (newPassword.isEmpty()) {
+                System.out.println("Invalid password.");
                 continue;
             }
+
+            newPassword = passwordEncrypt.encryptPassword(newPassword);
 
             this.changePassword(newPassword);
             changed = true;
@@ -89,11 +92,11 @@ public class Customer {
 
     private void changePassword(String password) {
         try(
-                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "UPDATE customers SET CustomerPassword = ? WHERE CustomerId = ?",
-                        ResultSet.TYPE_SCROLL_INSENSITIVE,
-                        ResultSet.CONCUR_READ_ONLY)
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "UPDATE customers SET CustomerPassword = ? WHERE CustomerId = ?",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
         ) {
             pstmt.setString(1, password);
             pstmt.setInt(2, this.customerId);
