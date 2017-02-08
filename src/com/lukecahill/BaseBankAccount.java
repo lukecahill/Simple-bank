@@ -39,16 +39,16 @@ public abstract class BaseBankAccount {
     protected void printBalance(String filename) {
 
         try(PrintWriter writer = new PrintWriter(filename)) {
-            writer.write("The current balance of the account is: " + balance);
-            System.out.println("Saved to \"" + filename + "\".");
+            writer.write(String.format("The current balance of the account is: {0}", balance));
+            System.out.println(String.format("Saved to \"{0}\".", filename));
         } catch(IOException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     protected void showAboutAccount() {
-        System.out.println("Name of account: " + this.name);
-        System.out.println("Account description: " + this.description);
+        System.out.println(String.format("Name of account: ", this.name));
+        System.out.println(String.format("Account description: " + this.description));
     }
 
     protected void withdraw() {
@@ -62,7 +62,7 @@ public abstract class BaseBankAccount {
         }
 
         this.balance -= amount;
-        System.out.println("Amount withdrawn! New balance is: " + this.balance);
+        System.out.println(String.format("Amount withdrawn! New balance is: {0}", this.balance));
         //want to then update the database
     }
 
@@ -76,13 +76,13 @@ public abstract class BaseBankAccount {
         }
 
         this.balance += amount;
-        System.out.println("Amount deposited! New balance is: " + this.balance);
+        System.out.println(String.format("Amount deposited! New balance is: {0}", this.balance));
         // want to then update the database
     }
 
     protected void showBalance() {
 
-        System.out.println("Showing balance for: " + this.name);
+        System.out.println(String.format("Showing balance for: {0}", this.name));
         System.out.println(this.balance);
     }
 

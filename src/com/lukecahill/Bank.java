@@ -105,7 +105,10 @@ public class Bank {
         try(
             Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT CustomerId, CustomerName, CustomerPassword FROM customers WHERE CustomerId = ? LIMIT 1",
+                    "SELECT CustomerId, CustomerName, CustomerPassword " +
+                            "FROM customers " +
+                            "WHERE CustomerId = ? " +
+                            "LIMIT 1",
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY)
         ) {

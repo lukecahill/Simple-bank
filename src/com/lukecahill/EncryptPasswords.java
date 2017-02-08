@@ -18,6 +18,7 @@ public class EncryptPasswords {
     public String encryptPassword(String customerPassword) {
         MessageDigest md = null;
         try {
+            // not secure, but this isn't a real bank
             md = MessageDigest.getInstance("SHA");
         } catch (NoSuchAlgorithmException e) {
             System.out.println("Could not verify password.");
@@ -32,7 +33,7 @@ public class EncryptPasswords {
         byte raw[] = md.digest();
         customerPassword = (new BASE64Encoder()).encode(raw);
 
-        System.out.println(customerPassword);
+        //System.out.println(customerPassword);
         return customerPassword;
     }
 }
