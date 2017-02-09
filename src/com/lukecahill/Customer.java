@@ -71,7 +71,8 @@ public class Customer {
                 this.savingsAccountOptions();
                 break;
             case "4":
-                this.totalAmountInAllAccounts();
+                double total = this.totalAmountInAllAccounts();
+                System.out.println("The total in all accounts is: " + total + "\n");
                 break;
             case "5":
                 this.changeName();
@@ -226,7 +227,7 @@ public class Customer {
         isaAccount.showOptions();
     }
 
-    private void totalAmountInAllAccounts() {
+    public double totalAmountInAllAccounts() {
         if(isaAccount == null) { isaAccount = new IsaAccount(this.getCustomerId()); }
         if(savingsAccount == null) { savingsAccount = new SavingsAccount(this.getCustomerId()); }
         if(currentAccount == null) { currentAccount = new CurrentAccount(this.getCustomerId()); }
@@ -243,7 +244,7 @@ public class Customer {
             total += item;
         }
 
-        System.out.println("The total in all accounts is: " + total + "\n");
+        return total;
     }
 
     private void checkChangePassword() {
