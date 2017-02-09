@@ -17,10 +17,12 @@ import java.sql.SQLException;
 public class SavingsAccount extends BaseBankAccount {
 
     private final double INTEREST = 0.40d;
+    private boolean exists = true;
 
     public SavingsAccount(int customerId) {
         System.out.println("Created savings account");
         this.customerId = customerId;
+        load();
     }
 
     @Override
@@ -45,6 +47,9 @@ public class SavingsAccount extends BaseBankAccount {
                     break;
                 case "5":
                     this.showAboutAccount();
+                    break;
+                case "6":
+                    this.calculateInterest();
                     break;
                 case "b":
                     this.leaveAccount = true;
@@ -76,15 +81,30 @@ public class SavingsAccount extends BaseBankAccount {
 
             while(rs.next()) {
                 this.balance = rs.getDouble("SavingsAccountBalance");
-                this.currentAccountId = rs.getInt("SavingsAccountId");
+                this.bankAccountId = rs.getInt("SavingsAccountId");
                 this.customerId = rs.getInt("CustomerId");
                 this.name = rs.getString("SavingsAccountName");
                 this.description = rs.getString("SavingsAccountDescription");
             }
+
+            if(this.bankAccountId == 0) {
+                exists = false;
+            }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
         }
+    }
 
+    public boolean exists() {
+        return exists;
+    }
+
+    private void withdraw() {
+        super.withdraw("savings");
+    }
+
+    private void deposit() {
+        super.deposit("savings");
     }
 
     protected void printBalance() {

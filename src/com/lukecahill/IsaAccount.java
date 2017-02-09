@@ -16,10 +16,12 @@ import java.sql.SQLException;
 public class IsaAccount extends BaseBankAccount {
 
     private final double INTEREST = 0.25d;
+    private boolean exists = true;
 
     public IsaAccount(int customerId) {
         this.customerId = customerId;
         System.out.println("Created ISA");
+        load();
     }
 
     @Override
@@ -44,6 +46,9 @@ public class IsaAccount extends BaseBankAccount {
                     break;
                 case "5":
                     this.showAboutAccount();
+                    break;
+                case "6":
+                    this.calculateInterest();
                     break;
                 case "b":
                     this.leaveAccount = true;
@@ -74,11 +79,20 @@ public class IsaAccount extends BaseBankAccount {
             ResultSet rs = pstmt.executeQuery();
 
             while(rs.next()) {
+                System.out.println(rs.getDouble(1));
+                System.out.println(rs.getInt(2));
+                System.out.println(rs.getInt(3));
+                System.out.println(rs.getString(4));
+                System.out.println(rs.getString(5));
                 this.balance = rs.getDouble("IsaAccountBalance");
-                this.currentAccountId = rs.getInt("IsaAccountId");
+                this.bankAccountId = rs.getInt("IsaAccountId");
                 this.customerId = rs.getInt("CustomerId");
                 this.name = rs.getString("IsaAccountName");
                 this.description = rs.getString("IsaAccountDescription");
+            }
+
+            if(this.bankAccountId == 0) {
+                exists = false;
             }
         } catch (SQLException e) {
             DBUtil.showErrorMessage(e);
@@ -89,8 +103,20 @@ public class IsaAccount extends BaseBankAccount {
         super.printBalance("isa_account_balance.txt");
     }
 
+    private void withdraw() {
+        super.withdraw("isa");
+    }
+
+    private void deposit() {
+        super.deposit("isa");
+    }
+
     public void calculateInterest() {
         double newInterest = (this.balance * INTEREST) + this.balance;
         System.out.println(newInterest);
+    }
+
+    public boolean exists() {
+        return exists;
     }
 }
