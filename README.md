@@ -1,6 +1,6 @@
 # Simple-bank
 
-A command-line bank applications.
+A command-line bank applications, created using Java.
 
 Uses a MySQL backend - the SQL for this can be found in 'database.sql'.
 
