@@ -3,10 +3,15 @@ package com.lukecahill;
 import com.lukecahill.database.DBType;
 import com.lukecahill.database.DBUtil;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -22,21 +27,33 @@ public class Customer {
     private String customerPassword;
 
     private static Scanner input = new Scanner(System.in);
+    BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+
     private EncryptPasswords passwordEncrypt = new EncryptPasswords();
     private IsaAccount isaAccount;
     private CurrentAccount currentAccount;
     private SavingsAccount savingsAccount;
 
     public void showCustomerOptions() {
-        System.out.println("Showing options for: " + this.getCustomerName());
-        System.out.println("Choose an option:");
-        System.out.println("1 - Show current account options");
-        System.out.println("2 - Show ISA account options");
-        System.out.println("3 - Show Savings account options");
-        System.out.println("4 - Change name");
-        System.out.println("5 - Change password");
-        System.out.println("q - Quit");
+        // just used for an example of collections.
+        List<String> options = new ArrayList<>();
+        options.add("Showing options for: " + this.getCustomerName());
+        options.add("Choose an option:");
+        options.add("1 - Show current account options");
+        options.add("2 - Show ISA account options");
+        options.add("3 - Show Savings account options");
+        options.add("4 - Show total from all accounts");
+        options.add("5 - Change name");
+        options.add("6 - Change password");
+        options.add("q - quit");
 
+        // just for an example of using lambda
+        options.forEach((x) -> System.out.println(x));
+
+        getCustomerOptionChoice();
+    }
+
+    private void getCustomerOptionChoice() {
         String choice = input.next();
         choice = choice.toLowerCase();
 
@@ -48,21 +65,20 @@ public class Customer {
                 currentAccount.showOptions();
                 break;
             case "2":
-                if(isaAccount == null) {
-                    isaAccount = new IsaAccount(this.getCustomerId());
-                }
-                isaAccount.showOptions();
+                this.isaAccountOptions();
                 break;
             case "3":
-                if(savingsAccount == null) {
-                    savingsAccount = new SavingsAccount(this.getCustomerId());
-                }
-                savingsAccount.showOptions();
+                this.savingsAccountOptions();
                 break;
             case "4":
-                this.changeName();
+                this.totalAmountInAllAccounts();
+                break;
             case "5":
+                this.changeName();
+                break;
+            case "6":
                 this.checkChangePassword();
+                break;
             case "q":
                 this.quitBank();
                 break;
@@ -70,6 +86,142 @@ public class Customer {
                 System.out.println("That option does not exist. Please retry.");
                 break;
         }
+    }
+
+    private void savingsAccountOptions() {
+        if(savingsAccount == null) {
+            savingsAccount = new SavingsAccount(this.getCustomerId());
+        }
+
+        if(!savingsAccount.exists()) {
+            System.out.println("Savings account does not currently exist!\n");
+            System.out.println("Would you like to create an account? Y/N");
+
+            String in = input.next();
+            switch(in) {
+                case "y":
+                    this.createAccountOptions(false);
+                    break;
+                case "n":
+                    return;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+        }
+        savingsAccount.showOptions();
+    }
+
+    public void createAccountOptions(boolean isIsa) {
+        String[] inputs = new String[3];
+        String[] questions = {
+                "Enter an account name: ",
+                "Enter an account description: ",
+                "Enter an amount to deposit: "
+        };
+
+        for(int i = 0; i < questions.length; i++) {
+            System.out.print(questions[i]);
+            String item = null;
+
+            try {
+                item = inputReader.readLine();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+            inputs[i] = item;
+        }
+
+        this.createAccount(isIsa, inputs);
+
+        if(isIsa) {
+            isaAccount = new IsaAccount(this.getCustomerId());
+        } else {
+            savingsAccount = new SavingsAccount(this.getCustomerId());
+        }
+    }
+
+    private void createAccount(boolean isIsa, String[] inputs) {
+        if(isIsa) {
+            try(
+                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+                PreparedStatement pstmt = conn.prepareStatement(
+                        "INSERT INTO isaaccounts(IsaAccountId, CustomerId," +
+                                "IsaAccountBalance, IsaAccountName, IsaAccountDescription)" +
+                                "VALUES(NULL, ?, ?, ?, ?)")
+            ) {
+                pstmt.setInt(1, this.customerId);
+                double amountToDeposit = Double.parseDouble(inputs[2]);
+                pstmt.setDouble(2, amountToDeposit);
+                pstmt.setString(3, inputs[0]);
+                pstmt.setString(4, inputs[1]);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                DBUtil.showErrorMessage(e);
+            }
+        } else {
+            try(
+                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+                PreparedStatement pstmt = conn.prepareStatement(
+                        "INSERT INTO savingsaccounts(SavingsAccountId, CustomerId," +
+                                "SavingsAccountBalance, SavingsAccountName, SavingsAccountDescription)" +
+                                "VALUES(NULL, ?, ?, ?, ?)")
+            ) {
+                pstmt.setInt(1, this.customerId);
+                double amountToDeposit = Double.parseDouble(inputs[2]);
+                pstmt.setDouble(2, amountToDeposit);
+                pstmt.setString(3, inputs[0]);
+                pstmt.setString(4, inputs[1]);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                DBUtil.showErrorMessage(e);
+            }
+        }
+    }
+
+    private void isaAccountOptions() {
+        if(isaAccount == null) {
+            isaAccount = new IsaAccount(this.getCustomerId());
+        }
+
+        if(!isaAccount.exists()) {
+            System.out.println("ISA account does not currently exist!\n");
+            System.out.println("Would you like to create an account? Y/N");
+
+            String in = input.next();
+            switch(in) {
+                case "y":
+                    this.createAccountOptions(true);
+                    break;
+                case "n":
+                    return;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
+        }
+        isaAccount.showOptions();
+    }
+
+    private void totalAmountInAllAccounts() {
+        if(isaAccount == null) { isaAccount = new IsaAccount(this.getCustomerId()); }
+        if(savingsAccount == null) { savingsAccount = new SavingsAccount(this.getCustomerId()); }
+        if(currentAccount == null) { currentAccount = new CurrentAccount(this.getCustomerId()); }
+
+        double[] listOfAccountAmounts = {
+                isaAccount.balance,
+                savingsAccount.balance,
+                currentAccount.balance
+        };
+
+        double total = 0;
+
+        for(double item : listOfAccountAmounts) {
+            total += item;
+        }
+
+        System.out.println("The total in all accounts is: " + total + "\n");
     }
 
     private void checkChangePassword() {
