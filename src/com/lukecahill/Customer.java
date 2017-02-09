@@ -133,50 +133,72 @@ public class Customer {
             inputs[i] = item;
         }
 
-        this.createAccount(isIsa, inputs);
-
         if(isIsa) {
+            this.createIsaAccount(inputs);
             isaAccount = new IsaAccount(this.getCustomerId());
         } else {
+            this.createSavingsAccount(inputs);
             savingsAccount = new SavingsAccount(this.getCustomerId());
         }
     }
 
-    private void createAccount(boolean isIsa, String[] inputs) {
-        if(isIsa) {
-            try(
-                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "INSERT INTO isaaccounts(IsaAccountId, CustomerId," +
-                                "IsaAccountBalance, IsaAccountName, IsaAccountDescription)" +
-                                "VALUES(NULL, ?, ?, ?, ?)")
-            ) {
-                pstmt.setInt(1, this.customerId);
-                double amountToDeposit = Double.parseDouble(inputs[2]);
-                pstmt.setDouble(2, amountToDeposit);
-                pstmt.setString(3, inputs[0]);
-                pstmt.setString(4, inputs[1]);
-                pstmt.executeUpdate();
-            } catch (SQLException e) {
-                DBUtil.showErrorMessage(e);
+    private void createIsaAccount(String[] inputs) {
+        try(
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "INSERT INTO isaaccounts(IsaAccountId, CustomerId," +
+                            "IsaAccountBalance, IsaAccountName, IsaAccountDescription)" +
+                            "VALUES(NULL, ?, ?, ?, ?)")
+        ) {
+            pstmt.setInt(1, this.customerId);
+            pstmt.setString(3, inputs[0]);
+            pstmt.setString(4, inputs[1]);
+
+            double amountToDeposit = 0.0d;
+            try {
+                amountToDeposit = Double.parseDouble(inputs[2]);
+                if(amountToDeposit < 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("An invalid amount was entered.");
             }
-        } else {
-            try(
-                Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-                PreparedStatement pstmt = conn.prepareStatement(
-                        "INSERT INTO savingsaccounts(SavingsAccountId, CustomerId," +
-                                "SavingsAccountBalance, SavingsAccountName, SavingsAccountDescription)" +
-                                "VALUES(NULL, ?, ?, ?, ?)")
-            ) {
-                pstmt.setInt(1, this.customerId);
-                double amountToDeposit = Double.parseDouble(inputs[2]);
-                pstmt.setDouble(2, amountToDeposit);
-                pstmt.setString(3, inputs[0]);
-                pstmt.setString(4, inputs[1]);
-                pstmt.executeUpdate();
-            } catch (SQLException e) {
-                DBUtil.showErrorMessage(e);
+
+            pstmt.setDouble(2, amountToDeposit);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    private void createSavingsAccount(String[] inputs) {
+        try(
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "INSERT INTO savingsaccounts(SavingsAccountId, CustomerId," +
+                            "SavingsAccountBalance, SavingsAccountName, SavingsAccountDescription)" +
+                            "VALUES(NULL, ?, ?, ?, ?)")
+        ) {
+            pstmt.setInt(1, this.customerId);
+            pstmt.setString(3, inputs[0]);
+            pstmt.setString(4, inputs[1]);
+
+            double amountToDeposit = 0.0d;
+            try {
+                amountToDeposit = Double.parseDouble(inputs[2]);
+                if(amountToDeposit < 0) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("An invalid amount was entered.");
             }
+
+            pstmt.setDouble(2, amountToDeposit);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
         }
     }
 
