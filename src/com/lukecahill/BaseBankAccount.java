@@ -1,7 +1,14 @@
 package com.lukecahill;
 
+import com.lukecahill.database.DBType;
+import com.lukecahill.database.DBUtil;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 /**
@@ -16,7 +23,7 @@ public abstract class BaseBankAccount {
     protected String description;
     protected double balance;
     protected int customerId;
-    protected int currentAccountId;
+    protected int bankAccountId;
     protected boolean leaveAccount = false;
 
     String[] accountOptions = {
@@ -39,34 +46,87 @@ public abstract class BaseBankAccount {
     protected void printBalance(String filename) {
 
         try(PrintWriter writer = new PrintWriter(filename)) {
-            writer.write(String.format("The current balance of the account is: {0}", balance));
-            System.out.println(String.format("Saved to \"{0}\".", filename));
+            writer.write("The current balance of the account is: " + balance);
+            System.out.println("Saved to \"" + filename + "\".\n");
         } catch(IOException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     protected void showAboutAccount() {
-        System.out.println(String.format("Name of account: ", this.name));
-        System.out.println(String.format("Account description: " + this.description));
+        System.out.println("Name of account: " + this.name);
+        System.out.println("Account description: " + this.description + "\n");
     }
 
-    protected void withdraw() {
+    protected void withdraw(String accountType) {
 
-        System.out.print("Enter an amount to deposit: ");
+        System.out.print("Enter an amount to withdraw: ");
         double amount = input.nextDouble();
 
         if(amount > this.balance) {
-            System.out.println("Withdrawal amount is greater than the current balance");
+            System.out.println("Withdrawal amount is greater than the current balance\n");
             return;
         }
 
         this.balance -= amount;
-        System.out.println(String.format("Amount withdrawn! New balance is: {0}", this.balance));
-        //want to then update the database
+        System.out.println("Amount withdrawn! New balance is: " + this.balance);
+
+        if(accountType.equalsIgnoreCase("current")) {
+            this.updateCurrentBalance();
+        } else if(accountType.equalsIgnoreCase("isa")) {
+            this.updateIsaBalance();
+        } else if(accountType.equalsIgnoreCase("savings")) {
+            this.updateSavingsBalance();
+        }
     }
 
-    protected void deposit() {
+    private void updateSavingsBalance() {
+        try(
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "UPDATE savingsaccounts SET CurrentSavingsBalance = ? WHERE SavingsAccountId = ? LIMIT 1",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
+        ) {
+            pstmt.setDouble(1, this.balance);
+            pstmt.setInt(2, this.bankAccountId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    private void updateIsaBalance() {
+        try(
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "UPDATE isaaccounts SET CurrentSavingsBalance = ? WHERE IsaAccountId = ? LIMIT 1",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
+        ) {
+            pstmt.setDouble(1, this.balance);
+            pstmt.setInt(2, this.bankAccountId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    private void updateCurrentBalance() {
+        try(
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "UPDATE currentaccounts SET CurrentAccountBalance = ? WHERE CurrentAccountId = ? LIMIT 1")
+        ) {
+            pstmt.setDouble(1, this.balance);
+            pstmt.setInt(2, this.bankAccountId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
+    }
+
+    protected void deposit(String accountType) {
         System.out.print("Enter an amount to deposit: ");
         double amount = input.nextDouble();
 
@@ -76,17 +136,28 @@ public abstract class BaseBankAccount {
         }
 
         this.balance += amount;
-        System.out.println(String.format("Amount deposited! New balance is: {0}", this.balance));
-        // want to then update the database
+        System.out.println("Amount deposited! New balance is: " + this.balance + "\n");
+
+        if(accountType.equalsIgnoreCase("current")) {
+            this.updateCurrentBalance();
+        } else if(accountType.equalsIgnoreCase("isa")) {
+            this.updateIsaBalance();
+        } else if(accountType.equalsIgnoreCase("savings")) {
+            this.updateSavingsBalance();
+        }
     }
 
     protected void showBalance() {
 
-        System.out.println(String.format("Showing balance for: {0}", this.name));
-        System.out.println(this.balance);
+        System.out.println("Showing balance for: " + this.name + "\n");
+        System.out.println(this.balance + "\n");
     }
 
     protected abstract void load();
     protected abstract void calculateInterest();
+
+    public double getBalance() {
+        return this.balance;
+    }
 
 }

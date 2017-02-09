@@ -78,7 +78,7 @@ public class CurrentAccount extends BaseBankAccount {
 
             while(rs.next()) {
                 this.balance = rs.getDouble("CurrentAccountBalance");
-                this.currentAccountId = rs.getInt("CurrentAccountId");
+                this.bankAccountId = rs.getInt("CurrentAccountId");
                 this.customerId = rs.getInt("CustomerId");
                 this.name = rs.getString("CurrentAccountName");
                 this.description = rs.getString("CurrentAccountDescription");
@@ -90,6 +90,14 @@ public class CurrentAccount extends BaseBankAccount {
 
     public void printBalance() {
         super.printBalance("current_account_balance.txt");
+    }
+
+    private void withdraw() {
+        super.withdraw("current");
+    }
+
+    private void deposit() {
+        super.deposit("current");
     }
 
     public void calculateInterest() {
