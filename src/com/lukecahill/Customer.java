@@ -27,7 +27,7 @@ public class Customer {
     private String customerPassword;
 
     private static Scanner input = new Scanner(System.in);
-    BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+    private static BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
 
     private EncryptPasswords passwordEncrypt = new EncryptPasswords();
     private IsaAccount isaAccount;
@@ -99,6 +99,8 @@ public class Customer {
             System.out.println("Would you like to create an account? Y/N");
 
             String in = input.next();
+            in = in.toLowerCase();
+
             switch(in) {
                 case "y":
                     this.createAccountOptions(false);
@@ -285,10 +287,33 @@ public class Customer {
     }
 
     private void changeName() {
-        String name = input.next();
-        this.setCustomerName(name);
+        System.out.print("Enter a new name: ");
+        String name = "";
+        try {
+            name = inputReader.readLine();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
 
-        // will then need to save this in the database
+        this.setCustomerName(name);
+        this.updateNameDatabase(name);
+    }
+
+    private void updateNameDatabase(String newName) {
+        try(
+            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "UPDATE customers SET CustomerName = ? WHERE CustomerId = ? LIMIT 1",
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY)
+        ) {
+            pstmt.setString(1, newName);
+            pstmt.setInt(2, this.customerId);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            DBUtil.showErrorMessage(e);
+        }
     }
 
     public int getCustomerId() {
