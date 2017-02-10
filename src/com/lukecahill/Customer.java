@@ -336,6 +336,13 @@ public class Customer {
     }
 
     public void quitBank() {
+        isaAccount = null;
+        currentAccount = null;
+        savingsAccount = null;
+        passwordEncrypt = null;
+        inputReader = null;
+        input.close();
+
         System.exit(0);
     }
 

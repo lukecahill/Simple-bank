@@ -16,7 +16,7 @@ import java.sql.SQLException;
 
 public class SavingsAccount extends BaseBankAccount {
 
-    private final double INTEREST = 0.40d;
+    private final double INTEREST = 0.04d; //4%
     private boolean exists = true;
 
     public SavingsAccount(int customerId) {

@@ -28,10 +28,6 @@ public class Bank {
         do {
             customerId = getCustomerId();
 
-            if(customerId <= 0) {
-                System.out.println("Please enter a valid ID.");
-            }
-
             customerPassword = getCustomerPassword();
             customerPassword = passwordEncrypt.encryptPassword(customerPassword);
             if (checkCustomerId(customerId, customerPassword)) {

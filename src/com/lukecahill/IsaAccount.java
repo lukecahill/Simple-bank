@@ -15,7 +15,7 @@ import java.sql.SQLException;
  */
 public class IsaAccount extends BaseBankAccount {
 
-    private final double INTEREST = 0.25d;
+    private final double INTEREST = 0.035d; // 3.5% - I wish it was this good...
     private boolean exists = true;
 
     public IsaAccount(int customerId) {
