@@ -105,7 +105,7 @@ public class Bank {
                 if(count > 1 || count == 0) {
                     return false; // should be redundant really.
                 }
-                customer.setCustomerId(rs.getInt("CustomerId"));;
+                customer.setCustomerId(rs.getInt("CustomerId"));
                 customer.setCustomerName(rs.getString("CustomerName"));
                 customer.setCustomerPassword(rs.getString("CustomerPassword"));
                 System.out.println("ID found.");
