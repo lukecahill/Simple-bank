@@ -3,8 +3,10 @@ package com.lukecahill;
 import com.lukecahill.database.DBType;
 import com.lukecahill.database.DBUtil;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.*;
-import java.util.Scanner;
 
 /**
  *
@@ -13,9 +15,9 @@ import java.util.Scanner;
  */
 public class Bank {
 
-    Customer customer = new Customer();
-    EncryptPasswords passwordEncrypt = new EncryptPasswords();
-    private static Scanner input = new Scanner(System.in);
+    private static Customer customer = new Customer();
+    private static EncryptPasswords passwordEncrypt = new EncryptPasswords();
+    private static BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
 
     private String bankName = "Lukes Bank";
 
@@ -28,6 +30,11 @@ public class Bank {
         do {
             customerId = getCustomerId();
 
+            if(customerId <= 0) {
+                System.out.println("Please enter a valid ID");
+                continue; // skip the rest of the loop
+            }
+
             customerPassword = getCustomerPassword();
             customerPassword = passwordEncrypt.encryptPassword(customerPassword);
             if (checkCustomerId(customerId, customerPassword)) {
@@ -37,8 +44,6 @@ public class Bank {
             }
         } while(!opened);
 
-        getCustomerDetails(customerId);
-
         do {
             customer.showCustomerOptions();
         } while(true);
@@ -46,12 +51,18 @@ public class Bank {
 
     private int getCustomerId() {
         System.out.print("Enter your customer ID: ");
+        String inputCustomerId;
         int customerId;
 
         try {
-            customerId = input.nextInt();
+            inputCustomerId = inputReader.readLine();
         } catch(Exception e) {
-            System.out.println("Please enter a valid ID.");
+            return 0;
+        }
+
+        try {
+            customerId = Integer.parseInt(inputCustomerId);
+        } catch(NumberFormatException e) {
             return 0;
         }
 
@@ -61,7 +72,13 @@ public class Bank {
     private String getCustomerPassword() {
         System.out.print("Enter password: ");
         String customerPassword;
-        customerPassword = input.next();
+
+        try {
+            customerPassword = inputReader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
 
         return customerPassword;
     }
@@ -71,7 +88,7 @@ public class Bank {
         try(
             Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
             PreparedStatement statement = conn.prepareStatement(
-                    "SELECT COUNT(CustomerId) " +
+                    "SELECT COUNT(CustomerId), CustomerId, CustomerName, CustomerPassword " +
                             "FROM customers " +
                             "WHERE CustomerId = ? " +
                             "AND CustomerPassword = ? " +
@@ -83,11 +100,14 @@ public class Bank {
             statement.setString(2, customerPassword);
             ResultSet rs = statement.executeQuery();
 
-            while(rs.next()) {
+            if(rs.next()) { // if there is one item.
                 int count = rs.getInt(1);
                 if(count > 1 || count == 0) {
-                    return false;
+                    return false; // should be redundant really.
                 }
+                customer.setCustomerId(rs.getInt("CustomerId"));;
+                customer.setCustomerName(rs.getString("CustomerName"));
+                customer.setCustomerPassword(rs.getString("CustomerPassword"));
                 System.out.println("ID found.");
                 return true;
             }
@@ -95,29 +115,5 @@ public class Bank {
             DBUtil.showErrorMessage(e);
         }
         return false;
-    }
-
-    private void getCustomerDetails(int customerId) {
-        try(
-            Connection conn = DBUtil.getConnection(DBType.MYSQL_DB);
-            PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT CustomerId, CustomerName, CustomerPassword " +
-                            "FROM customers " +
-                            "WHERE CustomerId = ? " +
-                            "LIMIT 1",
-                    ResultSet.TYPE_SCROLL_INSENSITIVE,
-                    ResultSet.CONCUR_READ_ONLY)
-        ) {
-            preparedStatement.setInt(1, customerId);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while(rs.next()) {
-                customer.setCustomerName(rs.getString("CustomerName"));
-                customer.setCustomerId(rs.getInt("CustomerId"));
-                customer.setCustomerPassword(rs.getString("CustomerPassword"));
-            }
-        } catch (SQLException e) {
-            DBUtil.showErrorMessage(e);
-        }
     }
 }
