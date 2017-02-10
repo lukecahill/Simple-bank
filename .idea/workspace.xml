@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c146b3c7-b7a7-4ad8-b243-875430663d4e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lukecahill/Bank.java" afterPath="$PROJECT_DIR$/src/com/lukecahill/Bank.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/database.sql" afterPath="$PROJECT_DIR$/database.sql" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,8 +43,8 @@
       <file leaf-file-name="Customer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/lukecahill/Customer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="28" column="58" lean-forward="true" selection-start-line="28" selection-start-column="58" selection-end-line="29" selection-end-column="101" />
+            <state relative-caret-position="375">
+              <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#checkChangePassword#0;class#Customer#0" expanded="false" />
@@ -54,6 +53,16 @@
                 <element signature="method#updateNameDatabase#0;class#Customer#0" expanded="false" />
                 <element signature="method#setCustomerName#0;class#Customer#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="database.sql" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/database.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="481">
+              <caret line="57" column="18" lean-forward="false" selection-start-line="57" selection-start-column="18" selection-end-line="57" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -108,10 +117,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Bank.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Bank.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/lukecahill/Bank.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="334">
+            <state relative-caret-position="1605">
               <caret line="107" column="64" lean-forward="false" selection-start-line="107" selection-start-column="64" selection-end-line="107" selection-end-column="64" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -153,7 +162,6 @@
         <option value="$PROJECT_DIR$/src/com/lukecahill/EncryptPasswords.java" />
         <option value="$PROJECT_DIR$/src/database.sql" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/database.sql" />
         <option value="$PROJECT_DIR$/src/com/lukecahill/CurrentAccount.java" />
         <option value="$PROJECT_DIR$/src/com/lukecahill/database/DBUtil.java" />
         <option value="$PROJECT_DIR$/src/com/lukecahill/Main.java" />
@@ -163,6 +171,7 @@
         <option value="$PROJECT_DIR$/src/com/lukecahill/SavingsAccount.java" />
         <option value="$PROJECT_DIR$/src/com/lukecahill/IsaAccount.java" />
         <option value="$PROJECT_DIR$/src/com/lukecahill/Bank.java" />
+        <option value="$PROJECT_DIR$/database.sql" />
       </list>
     </option>
   </component>
@@ -724,13 +733,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/database.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="757">
-          <caret line="57" column="72" lean-forward="false" selection-start-line="57" selection-start-column="1" selection-end-line="57" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lukecahill/EncryptPasswords.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -783,21 +785,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lukecahill/Customer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="58" lean-forward="true" selection-start-line="28" selection-start-column="58" selection-end-line="29" selection-end-column="101" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#checkChangePassword#0;class#Customer#0" expanded="false" />
-            <element signature="method#changePassword#0;class#Customer#0" expanded="false" />
-            <element signature="method#changeName#0;class#Customer#0" expanded="false" />
-            <element signature="method#updateNameDatabase#0;class#Customer#0" expanded="false" />
-            <element signature="method#setCustomerName#0;class#Customer#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lukecahill/SavingsAccount.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-435">
@@ -818,11 +805,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lukecahill/Bank.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="334">
+        <state relative-caret-position="1605">
           <caret line="107" column="64" lean-forward="false" selection-start-line="107" selection-start-column="64" selection-end-line="107" selection-end-column="64" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lukecahill/Customer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" column="0" lean-forward="true" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#checkChangePassword#0;class#Customer#0" expanded="false" />
+            <element signature="method#changePassword#0;class#Customer#0" expanded="false" />
+            <element signature="method#changeName#0;class#Customer#0" expanded="false" />
+            <element signature="method#updateNameDatabase#0;class#Customer#0" expanded="false" />
+            <element signature="method#setCustomerName#0;class#Customer#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="481">
+          <caret line="57" column="18" lean-forward="false" selection-start-line="57" selection-start-column="18" selection-end-line="57" selection-end-column="18" />
+          <folding />
         </state>
       </provider>
     </entry>
