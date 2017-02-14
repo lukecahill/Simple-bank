@@ -13,9 +13,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class EncryptPasswords {
 
-    public EncryptPasswords() {}
-
-    public String encryptPassword(String customerPassword) {
+    public static String encryptPassword(String customerPassword) {
         MessageDigest md = null;
         try {
             // not secure, but this isn't a real bank
