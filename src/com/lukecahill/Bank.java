@@ -15,11 +15,15 @@ import java.sql.*;
  */
 public class Bank {
 
-    private static Customer customer = new Customer();
-    private static EncryptPasswords passwordEncrypt = new EncryptPasswords();
-    private static BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+    private static Customer customer;
+    private static BufferedReader inputReader;
 
     private String bankName = "Lukes Bank";
+
+    public Bank() {
+        inputReader = new BufferedReader(new InputStreamReader(System.in));
+        customer = new Customer();
+    }
 
     public void open() {
         boolean opened = false;
@@ -36,7 +40,7 @@ public class Bank {
             }
 
             customerPassword = getCustomerPassword();
-            customerPassword = passwordEncrypt.encryptPassword(customerPassword);
+            customerPassword = EncryptPasswords.encryptPassword(customerPassword);
             if (checkCustomerId(customerId, customerPassword)) {
                 opened = true;
             } else {

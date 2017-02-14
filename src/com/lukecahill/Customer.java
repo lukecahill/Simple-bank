@@ -23,16 +23,19 @@ public class Customer {
 
     private int customerId;
     private String customerName;
-
     private String customerPassword;
 
-    private static Scanner input = new Scanner(System.in);
-    private static BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
+    private static Scanner input;
+    private static BufferedReader inputReader;
 
-    private EncryptPasswords passwordEncrypt = new EncryptPasswords();
     private IsaAccount isaAccount;
     private CurrentAccount currentAccount;
     private SavingsAccount savingsAccount;
+
+    public Customer() {
+        inputReader = new BufferedReader(new InputStreamReader(System.in));
+        input = new Scanner(System.in);
+    }
 
     public void showCustomerOptions() {
         // just used for an example of collections.
@@ -48,7 +51,7 @@ public class Customer {
         options.add("q - quit");
 
         // just for an example of using lambda
-        options.forEach((x) -> System.out.println(x));
+        options.forEach(x -> System.out.println(x));
 
         getCustomerOptionChoice();
     }
@@ -130,7 +133,8 @@ public class Customer {
             try {
                 item = inputReader.readLine();
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.out.println("Could not get user input. Please try again.");
+                return;
             }
 
             inputs[i] = item;
@@ -262,7 +266,7 @@ public class Customer {
                 continue;
             }
 
-            newPassword = passwordEncrypt.encryptPassword(newPassword);
+            newPassword = EncryptPasswords.encryptPassword(newPassword);
 
             this.changePassword(newPassword);
             changed = true;
@@ -341,7 +345,6 @@ public class Customer {
         isaAccount = null;
         currentAccount = null;
         savingsAccount = null;
-        passwordEncrypt = null;
         inputReader = null;
         input.close();
 
