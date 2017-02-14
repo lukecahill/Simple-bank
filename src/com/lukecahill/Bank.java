@@ -18,7 +18,7 @@ public class Bank {
     private static Customer customer;
     private static BufferedReader inputReader;
 
-    private String bankName = "Lukes Bank";
+    private String bankName = "Simple Bank";
 
     public Bank() {
         inputReader = new BufferedReader(new InputStreamReader(System.in));
