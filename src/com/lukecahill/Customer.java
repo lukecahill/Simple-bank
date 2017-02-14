@@ -215,6 +215,8 @@ public class Customer {
             System.out.println("Would you like to create an account? Y/N");
 
             String in = input.next();
+            in = in.toLowerCase();
+
             switch(in) {
                 case "y":
                     this.createAccountOptions(true);
