@@ -27,7 +27,7 @@ CREATE TABLE isaaccounts (
 );
 
 CREATE TABLE savingsaccounts (
-    SavingAccountId int PRIMARY KEY AUTO_INCREMENT,
+    SavingsAccountId int PRIMARY KEY AUTO_INCREMENT,
     CustomerId int,
     SavingsAccountBalance DOUBLE,
     SavingsAccountName VARCHAR(50),
