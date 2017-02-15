@@ -49,7 +49,7 @@ public abstract class BaseBankAccount {
             writer.write("The current balance of the account is: " + balance);
             System.out.println("Saved to \"" + filename + "\".\n");
         } catch(IOException ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -71,11 +71,11 @@ public abstract class BaseBankAccount {
         this.balance -= amount;
         System.out.println("Amount withdrawn! New balance is: " + this.balance);
 
-        if(accountType.equalsIgnoreCase("current")) {
+        if("current".equalsIgnoreCase(accountType)) {
             this.updateCurrentBalance();
-        } else if(accountType.equalsIgnoreCase("isa")) {
+        } else if("isa".equalsIgnoreCase(accountType)) {
             this.updateIsaBalance();
-        } else if(accountType.equalsIgnoreCase("savings")) {
+        } else if("savings".equalsIgnoreCase(accountType)) {
             this.updateSavingsBalance();
         }
     }
@@ -131,18 +131,18 @@ public abstract class BaseBankAccount {
         double amount = input.nextDouble();
 
         if(amount < 0) {
-            System.out.println("Amount is less than 0");
+            System.err.println("Amount is less than 0");
             return;
         }
 
         this.balance += amount;
         System.out.println("Amount deposited! New balance is: " + this.balance + "\n");
 
-        if(accountType.equalsIgnoreCase("current")) {
+        if("current".equalsIgnoreCase(accountType)) {
             this.updateCurrentBalance();
-        } else if(accountType.equalsIgnoreCase("isa")) {
+        } else if("isa".equalsIgnoreCase(accountType)) {
             this.updateIsaBalance();
-        } else if(accountType.equalsIgnoreCase("savings")) {
+        } else if("savings".equalsIgnoreCase(accountType)) {
             this.updateSavingsBalance();
         }
     }

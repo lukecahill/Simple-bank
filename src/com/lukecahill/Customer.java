@@ -2,6 +2,8 @@ package com.lukecahill;
 
 import com.lukecahill.database.DBType;
 import com.lukecahill.database.DBUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +29,7 @@ public class Customer {
 
     private static Scanner input;
     private static BufferedReader inputReader;
+    private static Log log;
 
     private IsaAccount isaAccount;
     private CurrentAccount currentAccount;
@@ -35,6 +38,7 @@ public class Customer {
     public Customer() {
         inputReader = new BufferedReader(new InputStreamReader(System.in));
         input = new Scanner(System.in);
+        log = LogFactory.getLog(Bank.class);
     }
 
     public void showCustomerOptions() {
@@ -112,6 +116,7 @@ public class Customer {
                     return;
                 default:
                     System.out.println("Invalid choice.");
+
                     break;
             }
         }
@@ -128,12 +133,13 @@ public class Customer {
 
         for(int i = 0; i < questions.length; i++) {
             System.out.print(questions[i]);
-            String item = null;
+            String item = "";
 
             try {
                 item = inputReader.readLine();
             } catch (IOException e) {
                 System.out.println("Could not get user input. Please try again.");
+                log.error(e.getMessage());
                 return;
             }
 
@@ -165,6 +171,7 @@ public class Customer {
             try {
                 amountToDeposit = Double.parseDouble(inputs[2]);
                 if(amountToDeposit < 0) {
+                    log.error("Amount to deposit must be greater than 0");
                     throw new NumberFormatException();
                 }
             } catch (NumberFormatException e) {
@@ -345,8 +352,18 @@ public class Customer {
         isaAccount = null;
         currentAccount = null;
         savingsAccount = null;
-        inputReader = null;
-        input.close();
+
+        if(inputReader != null) {
+            try {
+                inputReader.close();
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+
+        if(input != null) {
+            input.close();
+        }
 
         System.exit(0);
     }

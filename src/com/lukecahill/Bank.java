@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
+import org.apache.commons.logging.*;
 
 /**
  *
@@ -17,6 +18,7 @@ public class Bank {
 
     private static Customer customer;
     private static BufferedReader inputReader;
+    private static Log log = LogFactory.getLog(Bank.class);
 
     private String bankName = "Simple Bank";
 
@@ -35,7 +37,7 @@ public class Bank {
             customerId = getCustomerId();
 
             if(customerId <= 0) {
-                System.out.println("Please enter a valid ID");
+                System.err.println("Please enter a valid ID");
                 continue; // skip the rest of the loop
             }
 
@@ -44,7 +46,7 @@ public class Bank {
             if (checkCustomerId(customerId, customerPassword)) {
                 opened = true;
             } else {
-                System.out.println("Could not find a customer with those details. Try again.");
+                System.err.println("Could not find a customer with those details. Try again.");
             }
         } while(!opened);
 
@@ -67,6 +69,7 @@ public class Bank {
         try {
             customerId = Integer.parseInt(inputCustomerId);
         } catch(NumberFormatException e) {
+            log.warn("Could not format the users customer ID. User may have entered a letter or symbol.");
             return 0;
         }
 
@@ -80,7 +83,8 @@ public class Bank {
         try {
             customerPassword = inputReader.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Could not get input." + e.getMessage());
+            System.out.println("Failed to get password. Please try again.");
             return "";
         }
 
@@ -116,6 +120,7 @@ public class Bank {
                 return true;
             }
         } catch (SQLException e) {
+            log.error(e.getMessage());
             DBUtil.showErrorMessage(e);
         }
         return false;
