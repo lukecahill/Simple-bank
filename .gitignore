@@ -1,2 +1,3 @@
 *_account_balance.txt
 .sonar/
+target/
