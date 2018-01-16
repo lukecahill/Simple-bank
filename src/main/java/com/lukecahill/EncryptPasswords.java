@@ -1,4 +1,4 @@
-package main.java.com.lukecahill;
+package com.lukecahill;
 
 import org.apache.log4j.Logger;
 import sun.misc.BASE64Encoder;

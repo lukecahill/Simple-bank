@@ -1,8 +1,8 @@
-package main.java.com.lukecahill;
+package com.lukecahill;
 
 
-import main.java.com.lukecahill.database.DBType;
-import main.java.com.lukecahill.database.DBUtil;
+import com.lukecahill.database.DBType;
+import com.lukecahill.database.DBUtil;
 
 import java.sql.*;
 import java.text.DecimalFormat;

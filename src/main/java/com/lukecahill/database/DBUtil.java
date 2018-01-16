@@ -1,4 +1,4 @@
-package main.java.com.lukecahill.database;
+package com.lukecahill.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,9 +1,9 @@
-package main.java.com.lukecahill.tests;
+package com.lukecahill;
 
-import main.java.com.lukecahill.CurrentAccount;
-import main.java.com.lukecahill.Customer;
-import main.java.com.lukecahill.IsaAccount;
-import main.java.com.lukecahill.SavingsAccount;
+import com.lukecahill.CurrentAccount;
+import com.lukecahill.Customer;
+import com.lukecahill.IsaAccount;
+import com.lukecahill.SavingsAccount;
 import org.junit.Test;
 import org.junit.Assert;
 /**
@@ -11,7 +11,7 @@ import org.junit.Assert;
  * Created by Luke on 09/02/2017.
  *
  */
-public class BankTests {
+public class BankTest {
 
     private static final double DELTA = 1e-15;
 
