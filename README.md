@@ -8,4 +8,4 @@ Allows user to see balance, create a new savings/isa account, despoit and withdr
 
 Has login with encrypted passwords. Default passwords are in the 'database.sql' file.
 
-Includes Maven. To build the project using Maven use the command "mvn clean compile assembly:single"
+Includes Maven. To build the project using Maven use the command "mvn package"
